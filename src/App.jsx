@@ -12,8 +12,14 @@ function App() {
   const handleChange = (e) => {
     setTodo(e.target.value)
   }
-  const handleEdit = () => {
-    console.log("Edit Button was clicked")
+  const handleEdit = (e,id) => {
+    let ask=prompt("Enter New Todo : ")
+    let index=todos.findIndex((item)=>{
+      return item.id===id
+    })
+    let newTodos=[...todos]
+    newTodos[index].task=ask;
+    setTodos(newTodos)
   }
   const handleDelete = (e,id) => {
     let ask=confirm("Are you sure you want to delete this Todo?")
@@ -55,7 +61,7 @@ function App() {
                 </div>
 
                 <div className=" flex flex-row w-[35%] gap-2 justify-center items-center ">
-                  <button className="w-full p-2 bg-blue-600 hover:bg-blue-800 rounded-[5px] text-white cursor-pointer" onClick={handleEdit}>Edit</button>
+                  <button className="w-full p-2 bg-blue-600 hover:bg-blue-800 rounded-[5px] text-white cursor-pointer" onClick={(e)=>{handleEdit(e,item.id)}}>Edit</button>
                   <button className="text-white bg-red-700 rounded-[5px] w-full p-2 hover:bg-red-800 cursor-pointer" onClick={(e)=>{handleDelete(e,item.id)}}>Delete</button>
                 </div>
 
