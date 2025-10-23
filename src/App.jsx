@@ -44,23 +44,26 @@ function App() {
     <>
       <div className="container  mx-auto w-[50vw]" >
 
-        <h1 className="text-4xl font-[Cooper,Arial,Sans-Serif] text-center my-10 mx-auto w-full p-5 bg-violet-100 rounded-xl">TODO LIST</h1>
+        <h1 className="text-4xl font-[Cooper,Arial,Sans-Serif] text-center my-10 mx-auto w-full p-5 bg-violet-100 rounded-xl max-[750px]:text-2xl">TODO LIST</h1>
 
-        <div className="w-full flex flex-row gap-[5px]">
-          <input onChange={(e) => handleChange(e)} value={todo} type="text" className="border-2 border-gray-400 rounded-[5px] w-[80%] p-2" placeholder="Add Task..."></input>
-          <button onClick={handleAdd} className="w-[20%] bg-blue-600 hover:bg-blue-800 p-2 rounded-[5px] text-white cursor-pointer" >Add</button>
+        <div className="w-full flex flex-row gap-[5px] max-[550px]:flex-col">
+          <input onChange={(e) => handleChange(e)} value={todo} type="text" className="border-2 border-gray-400 rounded-[5px] w-[80%] p-2 max-[750px]:w-full" placeholder="Add Task..."></input>
+          <button onClick={handleAdd} className="w-[20%] bg-blue-600 hover:bg-blue-800 p-2 rounded-[5px] text-white cursor-pointer max-[750px]:w-[50%]" >Add</button>
         </div>
 
-        <div className="todos w-full mx-auto flex flex-col gap-[3px] my-5">
+        <div className="h-fit w-full mx-auto flex flex-col gap-2 my-5">
+          <div className="text-xl text-gray-300">
+            {todos.length===0?"No Todos Available":""}
+          </div>
           {todos.map(item => {
             return (
-              <div key={item.id} className="w-full flex flex-rows items-center gap-3 bg-gray-200 rounded-[10px] p-2 my-[5px]">
-                <div className="w-[65%] p-2 flex flex-row gap-2">
-                  <input type="checkbox" value={item.isCompleted} name={item.id} onChange={(e) => handleCheckbox(e)}></input>
-                  <p className={item.isCompleted ? "line-through" : ""}>{item.task}</p>
+              <div key={item.id} className="w-full flex flex-rows items-center gap-3 bg-gray-200 rounded-[10px] p-2 my-2 max-[750px]:flex-col max-[750px]:items-start">
+                <div className="w-[65%] flex flex-row gap-2 max-[750px]:w-full">
+                  <input type="checkbox" value={item.isCompleted} name={item.id} className='border' onChange={(e) => handleCheckbox(e)}></input>
+                  <p className={(item.isCompleted ? "line-through" : "")+"overflow-x-auto"}>{item.task}</p>
                 </div>
 
-                <div className=" flex flex-row w-[35%] gap-2 justify-center items-center ">
+                <div className="flex flex-row w-[35%] gap-2 justify-center items-center max-[750px]:w-full">
                   <button className="w-full p-2 bg-blue-600 hover:bg-blue-800 rounded-[5px] text-white cursor-pointer" onClick={(e)=>{handleEdit(e,item.id)}}>Edit</button>
                   <button className="text-white bg-red-700 rounded-[5px] w-full p-2 hover:bg-red-800 cursor-pointer" onClick={(e)=>{handleDelete(e,item.id)}}>Delete</button>
                 </div>
