@@ -54,6 +54,7 @@ function App() {
     let newTodos = [...todos]
     newTodos[index].isCompleted = !newTodos[index].isCompleted
     setTodos(newTodos)
+    saveInLS(newTodos)
   }
   return (
     <>
