@@ -1,34 +1,49 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import './App.css'
 function App() {
   let [todo, setTodo] = useState("")
   let [todos, setTodos] = useState([])
 
+  useEffect(() => {
+    let todoString=localStorage.getItem("todos")
+    if(todoString)
+    {
+       let newTodos=JSON.parse(todoString)
+       setTodos(newTodos);
+    }
+  },[])
+  
+  const saveInLS=(newTodos)=>{
+    localStorage.setItem("todos",JSON.stringify(newTodos))
+  }
   const handleAdd = () => {
-    setTodos([...todos, { id: uuidv4(), task: todo, isCompleted: false }])
+    let newTodos=[...todos, { id: uuidv4(), task: todo, isCompleted: false}]
+    setTodos(newTodos)
     setTodo("")
+    saveInLS(newTodos)
   }
   const handleChange = (e) => {
     setTodo(e.target.value)
   }
-  const handleEdit = (e,id) => {
-    let ask=prompt("Enter New Todo : ")
-    let index=todos.findIndex((item)=>{
-      return item.id===id
+  const handleEdit = (e, id) => {
+    let ask = prompt("Enter New Todo : ")
+    let index = todos.findIndex((item) => {
+      return item.id === id
     })
-    let newTodos=[...todos]
-    newTodos[index].task=ask;
+    let newTodos = [...todos]
+    newTodos[index].task = ask;
     setTodos(newTodos)
+    saveInLS(newTodos)
   }
-  const handleDelete = (e,id) => {
-    let ask=confirm("Are you sure you want to delete this Todo?")
-    if(ask)
-    {
-      let newTodo=todos.filter((item)=>{
-          return(item.id!==id)
+  const handleDelete = (e, id) => {
+    let ask = confirm("Are you sure you want to delete this Todo?")
+    if (ask) {
+      let newTodos = todos.filter((item) => {
+        return (item.id !== id)
       })
-      setTodos(newTodo);
+      setTodos(newTodos);
+      saveInLS(newTodos)
     }
   }
   const handleCheckbox = (e) => {
@@ -52,27 +67,26 @@ function App() {
         </div>
 
         <div className="h-fit w-full mx-auto flex flex-col gap-2 my-5">
-          <div className="text-xl text-gray-300">
-            {todos.length===0?"No Todos Available":""}
-          </div>
+          {todos.length === 0 && <div className="text-xl text-gray-300" >No Todos Available</div>}
+
           {todos.map(item => {
             return (
               <div key={item.id} className="w-full flex flex-rows items-center gap-3 bg-gray-200 rounded-[10px] p-2 my-2 max-[750px]:flex-col max-[750px]:items-start">
                 <div className="w-[65%] flex flex-row gap-2 max-[750px]:w-full">
-                  <input type="checkbox" value={item.isCompleted} name={item.id} className='border' onChange={(e) => handleCheckbox(e)}></input>
-                  <p className={(item.isCompleted ? "line-through" : "")+"overflow-x-auto"}>{item.task}</p>
+                  <input type="checkbox" value={item.isCompleted} checked={item.isCompleted} name={item.id} className='border' onChange={(e) => handleCheckbox(e)}></input>
+                  <p className={(item.isCompleted ? "line-through" : "") + " overflow-x-auto"}>{item.task}</p>
                 </div>
 
                 <div className="flex flex-row w-[35%] gap-2 justify-center items-center max-[750px]:w-full">
-                  <button className="w-full p-2 bg-blue-600 hover:bg-blue-800 rounded-[5px] text-white cursor-pointer" onClick={(e)=>{handleEdit(e,item.id)}}>Edit</button>
-                  <button className="text-white bg-red-700 rounded-[5px] w-full p-2 hover:bg-red-800 cursor-pointer" onClick={(e)=>{handleDelete(e,item.id)}}>Delete</button>
+                  <button className="w-full p-2 bg-blue-600 hover:bg-blue-800 rounded-[5px] text-white cursor-pointer" onClick={(e) => { handleEdit(e, item.id) }}>Edit</button>
+                  <button className="text-white bg-red-700 rounded-[5px] w-full p-2 hover:bg-red-800 cursor-pointer" onClick={(e) => { handleDelete(e, item.id) }}>Delete</button>
                 </div>
 
               </div>
             )
           })}
         </div>
-        
+
       </div>
     </>
   )
